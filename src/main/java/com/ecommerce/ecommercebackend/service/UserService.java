@@ -11,6 +11,7 @@ import com.ecommerce.ecommercebackend.exception.EmailFailureException;
 import com.ecommerce.ecommercebackend.exception.UserAlreadyExistException;
 import com.ecommerce.ecommercebackend.exception.UserNotVerifiedException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -109,5 +110,10 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public Object getLoggedInUser(Object any) {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return localUserDao.findByEmailIgnoreCase(email).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

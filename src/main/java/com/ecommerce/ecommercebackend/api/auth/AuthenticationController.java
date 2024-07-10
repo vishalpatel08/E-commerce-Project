@@ -17,28 +17,20 @@ import org.springframework.security.core.annotation.*;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-
-    private UserService userService;
+    private final UserService userService;
     public AuthenticationController(UserService userService){
         this.userService = userService;
     }
     @PostMapping("/register")
     public ResponseEntity registerUser(@Valid @RequestBody RegistrationBody registrationBody){
-        System.out.println(" a0 ");
         try{
-            System.out.println(" a3 ");
             userService.registerUser((registrationBody));
-            System.out.println(" a4 ");
             return ResponseEntity.ok().build();
-
         }catch (UserAlreadyExistException ex){
-            System.out.println(" a5 ");
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (EmailFailureException e) {
-            System.out.println(" a6 ");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
     }
 
     @PostMapping("/login")
@@ -79,10 +71,8 @@ public class AuthenticationController {
         }
     }
 
-
     @GetMapping("/me")
     public LocalUser getLoggedInProfile(@AuthenticationPrincipal LocalUser user){
         return user;
     }
-
 }
